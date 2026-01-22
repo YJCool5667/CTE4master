@@ -18,15 +18,23 @@ export const metadata: Metadata = {
   description: 'CTE - Climate-Tech Carbon Credit Business Development'
 };
 
-export default function LangLayout({ children, params }: { children: React.ReactNode; params: { lang: Lang } }) {
+export default async function LangLayout({ 
+  children, 
+  params 
+}: { 
+  children: React.ReactNode; 
+  params: Promise<{ lang: Lang }> 
+}) {
+  const { lang } = await params;
+  
   return (
-    <html lang={params.lang}>
+    <html lang={lang}>
       <body>
         <SiteHeader />
         <main className="min-h-[70vh]">
           {children}
         </main>
-        <SiteFooter lang={params.lang} />
+        <SiteFooter lang={lang} />
       </body>
     </html>
   );

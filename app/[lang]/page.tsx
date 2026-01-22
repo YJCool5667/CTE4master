@@ -2,9 +2,10 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { readPage, rewriteLegacyLinks, type Lang } from '@/lib/content';
 
-export default function Home({ params }: { params: { lang: Lang } }) {
-  const { title, body } = readPage(params.lang, 'index');
-  const htmlFixed = rewriteLegacyLinks(body, params.lang);
+export default async function Home({ params }: { params: Promise<{ lang: Lang }> }) {
+  const { lang } = await params;
+  const { title, body } = readPage(lang, 'index');
+  const htmlFixed = rewriteLegacyLinks(body, lang);
 
   return (
     <article className="prose prose-slate max-w-none">
@@ -16,7 +17,8 @@ export default function Home({ params }: { params: { lang: Lang } }) {
   );
 }
 
-export function generateMetadata({ params }: { params: { lang: Lang } }) {
-  const { title } = readPage(params.lang, 'index');
+export async function generateMetadata({ params }: { params: Promise<{ lang: Lang }> }) {
+  const { lang } = await params;
+  const { title } = readPage(lang, 'index');
   return { title };
 }
