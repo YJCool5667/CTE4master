@@ -8,9 +8,10 @@ export function generateStaticParams() {
   return listStaticParams().map((p) => ({ lang: p.lang, slug: p.slug! }));
 }
 
-export default function Page({ params }: { params: { lang: Lang; slug: Slug } }) {
-  const { title, body } = readPage(params.lang, params.slug);
-  const htmlFixed = rewriteLegacyLinks(body, params.lang);
+export default async function Page({ params }: { params: Promise<{ lang: Lang; slug: Slug }> }) {
+  const { lang, slug } = await params;
+  const { title, body } = readPage(lang, slug);
+  const htmlFixed = rewriteLegacyLinks(body, lang);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -22,7 +23,8 @@ export default function Page({ params }: { params: { lang: Lang; slug: Slug } })
   );
 }
 
-export function generateMetadata({ params }: { params: { lang: Lang; slug: Slug } }) {
-  const { title } = readPage(params.lang, params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ lang: Lang; slug: Slug }> }) {
+  const { lang, slug } = await params;
+  const { title } = readPage(lang, slug);
   return { title };
 }
